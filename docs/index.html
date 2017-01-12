@@ -5,60 +5,171 @@
 		<meta charset="utf-8">
 		<title>Spotify Song Suggestions</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 		<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
 
 		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-cookies.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
 		<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
-
+		<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+    	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 
 		<!-- Angular Material Library -->
 		<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
 		<!-- stylesheets -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
-		<link rel="stylesheet" href="dist/css/myplugin.css" type="text/css">
-		<link rel="stylesheet" href="assets/css/custom.css" type="text/css">
+		<link rel="stylesheet" href="docs/dist/css/myplugin.css" type="text/css">
+		<link rel="stylesheet" href="docs/assets/css/custom.css" type="text/css">
 	</head>
 
 	<body>
 <!-- <nav>
 	Navigation elements that should appear on all pages...
 </nav> -->
-	<div ng-controller="SpotifyController as ctrl" layout="column" ng-cloak>
-		<md-content class="md-padding" layout="column" style="min-height: 100px; background: #828282" md-colors="{color: 'grey-100'}">
-			<h1><img style="width:25px;height:25px" src="dist/img/Spotify_Icon_RGB_Green.png"/> Spotify Song Suggestions</h1>
-			<h2 class="md-title">Use <code>md-autocomplete</code>  to build an ordered set of chips.</h2>
+	
+	<div class="container">
+      <div id="login">
+        <h1>This is an example of the Authorization Code flow</h1>
+        <a href="/login" class="btn btn-primary">Log in with Spotify</a>
+      </div>
+      <div id="loggedin">
+      	<div ng-controller="SpotifyController as ctrl" layout="column" ng-cloak>
+			<md-content class="md-padding" layout="column" style="min-height: 100px; background: #828282" md-colors="{color: 'grey-100'}">
+				<h1><img style="width:25px;height:25px" src="dist/img/Spotify_Icon_RGB_Green.png"/> Spotify Song Suggestions</h1>
+				<h2 class="md-title">Use <code>md-autocomplete</code>  to build an ordered set of chips.</h2>
 
-			<md-chips ng-model="ctrl.selectedVegetables" md-autocomplete-snap
-			  	md-transform-chip="ctrl.transformChip($chip)"
-			  	md-require-match="ctrl.autocompleteDemoRequireMatch">
-			  <md-autocomplete
-				  md-selected-item="ctrl.selectedItem"
-				  md-search-text="ctrl.searchText"
-				  md-items="item in ctrl.querySearch(ctrl.searchText)"
-				  md-item-text="item.name"
-				  placeholder="Search for a vegetable">
-				<span md-highlight-text="ctrl.searchText">{{item.name}} :: {{item.type}}</span>
-			  </md-autocomplete>
-			  <md-chip-template>
-				<span>
-				  <strong>{{$chip.name}}</strong>
-				  <em>({{$chip.type}})</em>
-				</span>
-			  </md-chip-template>
-			</md-chips>
+				<md-chips ng-model="ctrl.selectedVegetables" md-autocomplete-snap
+				  	md-transform-chip="ctrl.transformChip($chip)"
+				  	md-require-match="ctrl.autocompleteDemoRequireMatch">
+				  <md-autocomplete
+					  md-selected-item="ctrl.selectedItem"
+					  md-search-text="ctrl.searchText"
+					  md-items="item in ctrl.querySearch(ctrl.searchText)"
+					  md-item-text="item.name"
+					  placeholder="Search for a vegetable">
+					<span md-highlight-text="ctrl.searchText">{{item.name}} :: {{item.type}}</span>
+				  </md-autocomplete>
+				  <md-chip-template>
+					<span>
+					  <strong>{{$chip.name}}</strong>
+					  <em>({{$chip.type}})</em>
+					</span>
+				  </md-chip-template>
+				</md-chips>
 
-			<p>
-			  <md-checkbox ng-model="ctrl.autocompleteDemoRequireMatch">
-				Tell the autocomplete to require a match (when enabled you cannot create new chips)
-			  </md-checkbox>
-			</p>
+				<p>
+				  <md-checkbox ng-model="ctrl.autocompleteDemoRequireMatch">
+					Tell the autocomplete to require a match (when enabled you cannot create new chips)
+				  </md-checkbox>
+				</p>
 
-		</md-content>
-	</div>
+			</md-content>
+		</div>
+        <div id="user-profile">
+        </div>
+        <div id="oauth">
+        </div>
+        <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+      </div>
+    </div>
+
+    <script id="user-profile-template" type="text/x-handlebars-template">
+      <h1>Logged in as {{display_name}}</h1>
+      <div class="media">
+        <div class="pull-left">
+          <img class="media-object" width="150" src="{{images.0.url}}" />
+        </div>
+        <div class="media-body">
+          <dl class="dl-horizontal">
+            <dt>Display name</dt><dd class="clearfix">{{display_name}}</dd>
+            <dt>Id</dt><dd>{{id}}</dd>
+            <dt>Email</dt><dd>{{email}}</dd>
+            <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
+            <dt>Link</dt><dd><a href="{{href}}">{{href}}</a></dd>
+            <dt>Profile Image</dt><dd class="clearfix"><a href="{{images.0.url}}">{{images.0.url}}</a></dd>
+            <dt>Country</dt><dd>{{country}}</dd>
+          </dl>
+        </div>
+      </div>
+    </script>
+
+    <script id="oauth-template" type="text/x-handlebars-template">
+      <h2>oAuth info</h2>
+      <dl class="dl-horizontal">
+        <dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
+        <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}></dd>
+      </dl>
+    </script>
+	 <script>
+      (function() {
+        /**
+         * Obtains parameters from the hash of the URL
+         * @return Object
+         */
+        function getHashParams() {
+          var hashParams = {};
+          var e, r = /([^&;=]+)=?([^&;]*)/g,
+              q = window.location.hash.substring(1);
+          while ( e = r.exec(q)) {
+             hashParams[e[1]] = decodeURIComponent(e[2]);
+          }
+          return hashParams;
+        }
+        var userProfileSource = document.getElementById('user-profile-template').innerHTML,
+            userProfileTemplate = Handlebars.compile(userProfileSource),
+            userProfilePlaceholder = document.getElementById('user-profile');
+        var oauthSource = document.getElementById('oauth-template').innerHTML,
+            oauthTemplate = Handlebars.compile(oauthSource),
+            oauthPlaceholder = document.getElementById('oauth');
+        var params = getHashParams();
+        var access_token = params.access_token,
+            refresh_token = params.refresh_token,
+            error = params.error;
+        if (error) {
+          alert('There was an error during the authentication');
+        } else {
+          if (access_token) {
+            // render oauth info
+            oauthPlaceholder.innerHTML = oauthTemplate({
+              access_token: access_token,
+              refresh_token: refresh_token
+            });
+            $.ajax({
+                url: 'https://api.spotify.com/v1/me',
+                headers: {
+                  'Authorization': 'Bearer ' + access_token
+                },
+                success: function(response) {
+                  userProfilePlaceholder.innerHTML = userProfileTemplate(response);
+                  $('#login').hide();
+                  $('#loggedin').show();
+                }
+            });
+          } else {
+              // render initial screen
+              $('#login').show();
+              $('#loggedin').hide();
+          }
+          document.getElementById('obtain-new-token').addEventListener('click', function() {
+            $.ajax({
+              url: '/refresh_token',
+              data: {
+                'refresh_token': refresh_token
+              }
+            }).done(function(data) {
+              access_token = data.access_token;
+              oauthPlaceholder.innerHTML = oauthTemplate({
+                access_token: access_token,
+                refresh_token: refresh_token
+              });
+            });
+          }, false);
+        }
+      })();
+    </script>
 
 		<!-- Javascript -->
 		<script src="dist/js/myplugin.js"></script>

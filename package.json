@@ -50,10 +50,10 @@
     "phantomjs": "^1.9.19"
   },
   "dependencies": {
-    "cookie-parser": "latest",
+    "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
-    "querystring": "latest",
-    "request": "latest",
+    "querystring": "^0.2.0",
+    "request": "^2.79.0",
     "spotify-web-api-node": "^2.3.6"
   }
 }

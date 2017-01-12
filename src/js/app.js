@@ -3,24 +3,34 @@
   // var request = require('request'); // "Request" library
 
   angular
-      .module('MyApp', ['ngMaterial'])
+      .module('MyApp', ['ngMaterial', 'ngCookies'])
       .controller('SpotifyController', DemoCtrl);
 
-  function DemoCtrl ($http, $timeout, $q) {
-    var self = this;
+  function DemoCtrl ($http, $timeout, $q, $cookies) {
+    // if ($cookies.get('access_token') && $cookies.get('refresh_token')) {
+      var self = this;
 
-    self.readonly = false;
-    self.selectedItem = null;
-    self.searchText = null;
-    self.querySearch = querySearch;
-    self.vegetables = loadVegetables();
-    self.selectedVegetables = [];
-    self.numberChips = [];
-    self.numberChips2 = [];
-    self.numberBuffer = '';
-    self.autocompleteDemoRequireMatch = true;
-    self.transformChip = transformChip;
+      self.readonly = false;
+      self.selectedItem = null;
+      self.searchText = null;
+      self.querySearch = querySearch;
+      self.vegetables = loadVegetables();
+      self.selectedVegetables = [];
+      self.numberChips = [];
+      self.numberChips2 = [];
+      self.numberBuffer = '';
+      self.autocompleteDemoRequireMatch = true;
+      self.transformChip = transformChip;
 
+      console.log($cookies.getAll());
+      // $http.get('/api/getAccessToken')
+      //     .success(function(result) {
+      //         console.log(result);
+      //     })
+      //     .error(function(data) {
+      //         console.log('Error: ' + data);
+      //     });
+    // }
     /**
      * Return the proper object when the append is called.
      */

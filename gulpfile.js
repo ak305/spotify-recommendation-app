@@ -268,12 +268,14 @@ gulp.task('clean:docs', function () {
 gulp.task('listen', function () {
     // livereload.listen();
     gulp.watch(paths.input, ['default']);
+    gulp.watch('server.js', ['default']);
     // livereload.changed(paths.input);
 
     nodemon({
         'script': 'server.js',
         // 'ignore': 'public/js/*.js'
     });
+
 });
 
 

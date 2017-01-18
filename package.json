@@ -46,6 +46,7 @@
     "karma-phantomjs-launcher": "^0.2.0",
     "karma-spec-reporter": "^0.0.19",
     "lazypipe": "^0.2.4",
+    "morgan": "^1.7.0",
     "node-fs": "^0.1.7",
     "phantomjs": "^1.9.19"
   },

@@ -29,9 +29,9 @@
 <!-- <nav>
 	Navigation elements that should appear on all pages...
 </nav> -->
-	
-	<div class="container">
-      <div id="login">
+  
+  <div class="container" md-colors="{color: 'grey-100'}">
+      <div id="login" >
         <h1>This is an example of the Authorization Code flow</h1>
         <a href="/login" class="btn btn-primary">Log in with Spotify</a>
       </div>
@@ -39,37 +39,38 @@
         <div id="user-profile">
         </div>
         <div ng-controller="SpotifyController as vm" layout="column" ng-cloak>
-			<md-content class="md-padding" layout="column" style="min-height: 100px; background: #828282" md-colors="{color: 'grey-100'}">
-				<h1><img style="width:25px;height:25px" src="dist/img/Spotify_Icon_RGB_Green.png"/> Spotify Song Suggestions</h1>
-				<h2 class="md-title">Use <code>md-autocomplete</code>  to build an ordered set of chips.</h2>
+      <md-content class="md-padding" layout="column" style="min-height: 100px; background: #828282" md-colors="{color: 'grey-100'}">
+        <h1><img style="width:25px;height:25px" src="dist/img/Spotify_Icon_RGB_Green.png"/> Spotify Song Suggestions</h1>
+        <h2 class="md-title">Use <code>md-autocomplete</code>  to build an ordered set of chips.</h2>
 
-				<md-chips ng-model="vm.selectedVegetables" md-autocomplete-snap
-				  	md-transform-chip="vm.transformChip($chip)"
-				  	md-require-match="vm.autocompleteDemoRequireMatch">
-				  <md-autocomplete
-					  md-selected-item="vm.selectedItem"
-					  md-search-text="vm.searchText"
-					  md-items="item in vm.querySearch(vm.searchText)"
-					  md-item-text="item.name"
-					  placeholder="Search for a vegetable">
-					<span md-highlight-text="vm.searchText">{{item.name}} {{item.artist}}</span>
-				  </md-autocomplete>
-				  <md-chip-template>
-					<span>
-					  <strong>{{$chip.name}}</strong>
-					  <em>({{$chip.artist}})</em>
-					</span>
-				  </md-chip-template>
-				</md-chips>
+        <md-chips ng-model="vm.selectedSongs" md-autocomplete-snap
+            md-transform-chip="vm.transformChip($chip)"
+            md-require-match="vm.autocompleteDemoRequireMatch">
+          <md-autocomplete
+            md-selected-item="vm.selectedItem"
+            md-search-text="vm.searchText"
+            md-items="item in vm.querySearch(vm.searchText)"
+            md-item-text="item.name"
+            placeholder="Search for a song">
+          <span md-highlight-text="vm.searchText">{{item.name}} {{item.artist}}</span>
+          </md-autocomplete>
+          <md-chip-template>
+          <span>
+            <strong>{{$chip.name}}</strong>
+            <em>({{$chip.artist}})</em>
+          </span>
+          </md-chip-template>
+        </md-chips>
 
-				<p>
-				  <md-checkbox ng-model="vm.autocompleteDemoRequireMatch">
-					Tell the autocomplete to require a match (when enabled you cannot create new chips)
-				  </md-checkbox>
-				</p>
+        <p>
+          <md-checkbox ng-model="vm.autocompleteDemoRequireMatch">
+          Tell the autocomplete to require a match (when enabled you cannot create new chips)
+          </md-checkbox>
+        </p>
+       <md-button ng-click="vm.getRecommendations()" class="md-raised md-primary">Primary</md-button>
 
-			</md-content>
-		</div>
+      </md-content>
+    </div>
         <div id="oauth">
         </div>
         <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
@@ -103,7 +104,7 @@
         <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}></dd>
       </dl>
     </script>
-	 <script>
+   <script>
       (function() {
         /**
          * Obtains parameters from the hash of the URL
@@ -170,7 +171,6 @@
         }
       })();
     </script>
-
 		<!-- Javascript -->
 		<script src="dist/js/myplugin.js"></script>
 		<script src="dist/js/app.js"></script>

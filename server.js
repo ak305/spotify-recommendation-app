@@ -9,6 +9,7 @@ var SpotifyWebApi = require('spotify-web-api-node');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var morgan = require('morgan');             // log requests to the console (express4)
+var bodyParser = require('body-parser');
 
 
 var generateRandomString = N => (Math.random().toString(36)+Array(N).join('0')).slice(2, N+2);
@@ -50,9 +51,10 @@ var updateRefreshToken = function() {
 };
 
 
-app.use(express.static(__dirname))
-	 .use(cookieParser());   
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(__dirname));
 app.use(morgan('dev'));                                         // log every request to the console
 
 // console.log(__dirname + "/docs");
@@ -152,7 +154,7 @@ app.get('/api/getUserPlaylists', (req, res) => {
   });
 });
 
-app.get('api/getPlaylistsTracks', (req, res) => {
+app.get('/api/getPlaylistsTracks', (req, res) => {
 	// spotifyApi.getPlaylist(req.query.user_id, )
  //  .then(function(data) {
  //    console.log('Some information about this playlist', data.body);
@@ -163,12 +165,19 @@ app.get('api/getPlaylistsTracks', (req, res) => {
 });
 
 
+app.post('/api/getRecommendations', (req, res) => {
+	console.log(req.body);
+	res.send("success");
+});
+
 app.listen(3000, () => {
     console.log('listening on 3000');   
 });
 
 
 app.get('*', (req, res) =>{
-  res.sendFile('docs/index.html'); // load the single view file (angular will handle the page changes on the front-end)
-})
+  // res.sendFile('docs/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+  res.sendFile(__dirname + '/docs/index.html');
+
+});
 

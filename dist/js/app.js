@@ -26,8 +26,8 @@
         vm.selectedItem = null;
         vm.searchText = null;
         vm.querySearch = querySearch;
-        vm.vegetables = loadVegetables();
-        vm.selectedVegetables = [];
+        vm.songs = loadSongs();
+        vm.selectedSongs = [];
         vm.numberChips = [];
         vm.numberChips2 = [];
         vm.numberBuffer = '';
@@ -36,12 +36,9 @@
         vm.accessToken = '';
         vm.refreshToken = '';
         vm.userId = '';
-        // vm.authenticated = false;
       });
 
-    }
-
-    
+    } 
 
     /**
      * Return the proper object when the append is called.
@@ -57,10 +54,10 @@
     }
 
     /**
-     * Search for vegetables.
+     * Search for songs.
      */
     function querySearch (query) {
-      var results = query ? vm.vegetables.filter(createFilterFor(query)) : [];
+      var results = query ? vm.songs.filter(createFilterFor(query)) : [];
       return results;
     }
 
@@ -70,59 +67,35 @@
     function createFilterFor(query) {
       var lowercaseQuery = angular.lowercase(query);
 
-      return function filterFn(vegetable) {
-        return (vegetable._lowername.indexOf(lowercaseQuery) === 0) || 
-        (vegetable._lowerartist.indexOf(lowercaseQuery) === 0);
+      return function filterFn(song) {
+        return (song._lowername.indexOf(lowercaseQuery) === 0) || 
+        (song._lowerartist.indexOf(lowercaseQuery) === 0);
       };
 
     }
 
-    function loadVegetables() {
-      // var promise = getMySavedTracks();
-      // promise.then(function (data){
-        // console.log("LOADING...");
-        var veggies = [];
-        for (var i in vm.playlists) {
-          console.log(vm.playlists[i].track.name, vm.playlists[i].track.artists[0].name);
-          var object = {name: vm.playlists[i].track.name, artist: vm.playlists[i].track.artists[0].name};
-          veggies.push(object);
-        }
-        // console.log(veggies);
-        // var veggies = [
-        //   {
-        //     'name': 'Broccoli',
-        //     'type': 'Brassica'
-        //   },
-        //   {
-        //     'name': 'Cabbage',
-        //     'type': 'Brassica'
-        //   },
-        //   {
-        //     'name': 'Carrot',
-        //     'type': 'Umbelliferous'
-        //   },
-        //   {
-        //     'name': 'Lettuce',
-        //     'type': 'Composite'
-        //   },
-        //   {
-        //     'name': 'Spinach',
-        //     'type': 'Goosefoot'
-        //   }
-        // ];
+    function loadSongs() {
+      var songs = [];
+      for (var i in vm.playlists) {
+        // console.log(vm.playlists[i].track.name, vm.playlists[i].track.artists[0].name);
+        var object = {name: vm.playlists[i].track.name, 
+                      artist: vm.playlists[i].track.artists[0].name,
+                      id: vm.playlists[i].track.id,
+                      artist_id: vm.playlists[i].track.artists[0].id};
+        songs.push(object);
+      }
 
-        return veggies.map(function (veg) {
-          veg._lowername = veg.name.toLowerCase();
-          veg._lowerartist = veg.artist.toLowerCase();
-          // veg._lowertype = veg.type.toLowerCase();
-          return veg;
-        });
-      // });
+      return songs.map(function (song) {
+        song._lowername = song.name.toLowerCase();
+        song._lowerartist = song.artist.toLowerCase();
+        // song._lowertype = song.type.toLowerCase();
+        return song;
+      });
     }
 
     function getMySavedTracks() {
       var defer = $q.defer();
-      console.log("GETTING SAVED TRACKS");
+      console.log("TEST");
       $http.get('/api/me/tracks')
           .success(function(result) {
             console.log(result);
@@ -139,16 +112,11 @@
 
     function getUserPlaylists() {
       var defer = $q.defer();
-      console.log("getUserPlaylists");
       $http.get('/api/getUserPlaylists', {
             params: {user_id: $cookies.get('user_id') }
           })
           .success(function(result) {
             vm.playlists = result.items;
-            // console.log(vm.playlists);
-            // for (var i in vm.playlists) {
-            //   console.log(vm.playlists[i].name);
-            // }
             defer.resolve(result);
           })
           .error(function(data) {
@@ -166,9 +134,6 @@
           })
           .success(function(result) {
             vm.playlists = result.items;
-            // for (var i in vm.playlists) {
-            //   console.log(vm.playlists[i].name);
-            // }
             defer.resolve(result);
           })
           .error(function(data) {
@@ -178,5 +143,29 @@
 
       return defer.promise;
     }
+
+    vm.getRecommendations = function() {
+      var defer = $q.defer();
+
+      var seedArtists = [];
+      var seedTracks = [];
+      for (var i in vm.selectedSongs) {
+        seedArtists.push(vm.selectedSongs[i].id);
+        seedTracks.push(vm.selectedSongs[i].artist_id);
+      }
+
+      $http.post('/api/getRecommendations', {
+            params: {seed_artists: seedArtists, seed_tracks: seedTracks}
+          })
+          .success(function(result) {
+            defer.resolve(result);
+          })
+          .error(function(data) {
+            defer.reject(data);
+            console.log('Error: ' + data);
+          });
+
+      return defer.promise;
+    };   
   }
 })();

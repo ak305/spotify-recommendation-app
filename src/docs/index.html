@@ -31,13 +31,14 @@
           </span>
           </md-chip-template>
         </md-chips>
-
+        <md-content ng-model="vm.recommendations">
+        </md-content>
         <p>
           <md-checkbox ng-model="vm.autocompleteDemoRequireMatch">
           Tell the autocomplete to require a match (when enabled you cannot create new chips)
           </md-checkbox>
         </p>
-       <md-button ng-click="vm.getRecommendations()" class="md-raised md-primary">Primary</md-button>
+       <md-button ng-click="vm.getRecommendations()" class="md-raised md-primary">Get Recommendations</md-button>
 
       </md-content>
     </div>

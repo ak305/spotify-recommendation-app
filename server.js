@@ -136,7 +136,7 @@ app.get('/api/me/tracks', (req, res) => {
 	console.log(spotifyApi.getAccessToken());
 	spotifyApi.getMySavedTracks()
   .then(function(data) {
-    console.log('Done!', data);
+    // console.log('Done!', data);
     res.send(data.body);
   }, function(err) {
     console.log('Something went wrong!', err);
@@ -147,7 +147,7 @@ app.get('/api/getUserPlaylists', (req, res) => {
 	// console.log(req.query.user_id);
 	spotifyApi.getUserPlaylists()
   .then(function(data) {
-    console.log('Retrieved playlists', data.body);
+    // console.log('Retrieved playlists', data.body);
     res.send(data.body);
   },function(err) {
     console.log('Something went wrong!', err);
@@ -167,7 +167,15 @@ app.get('/api/getPlaylistsTracks', (req, res) => {
 
 app.post('/api/getRecommendations', (req, res) => {
 	console.log(req.body);
-	res.send("success");
+	console.log(req.body.params.seed_tracks);
+	spotifyApi.getRecommendations({seed_artists: req.body.params.seed_artists, seed_tracks: req.body.params.seed_tracks})
+	.then(function(data) {
+		console.log(data.body);
+		res.send(data.body);
+
+	}, function(err) {
+    console.log('Something went wrong!', err);
+	});
 });
 
 app.listen(3000, () => {

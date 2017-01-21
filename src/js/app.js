@@ -88,10 +88,10 @@
 
     function getMySavedTracks() {
       var defer = $q.defer();
-      console.log("TEST");
+      // console.log("TEST");
       $http.get('/api/me/tracks')
           .success(function(result) {
-            console.log(result);
+            // console.log(result);
             vm.playlists = result.items;
             defer.resolve(result);
           })
@@ -143,14 +143,16 @@
       var seedArtists = [];
       var seedTracks = [];
       for (var i in vm.selectedSongs) {
-        seedArtists.push(vm.selectedSongs[i].id);
-        seedTracks.push(vm.selectedSongs[i].artist_id);
+        seedArtists.push(vm.selectedSongs[i].artist_id);
+        seedTracks.push(vm.selectedSongs[i].id);
       }
 
       $http.post('/api/getRecommendations', {
             params: {seed_artists: seedArtists, seed_tracks: seedTracks}
           })
           .success(function(result) {
+            console.log(result);
+            vm.recommendations = result;
             defer.resolve(result);
           })
           .error(function(data) {

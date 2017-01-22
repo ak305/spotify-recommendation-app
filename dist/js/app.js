@@ -36,6 +36,7 @@
         vm.accessToken = '';
         vm.refreshToken = '';
         vm.userId = '';
+        vm.recommendations = '';
       });
 
     } 
@@ -159,7 +160,9 @@
           })
           .success(function(result) {
             console.log(result);
-            vm.recommendations = result;
+            for (var i in result.tracks) {
+              vm.recommendations += result.tracks[i].name + ' - ' + result.tracks[i].artists[0].name + '\n';
+            }
             defer.resolve(result);
           })
           .error(function(data) {

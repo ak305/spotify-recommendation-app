@@ -1,9 +1,14 @@
 // Add styles here...
 
-$background: #828282;
-// $background: #000000;
+// $background: #828282;
+$background: #000000;
 
 
 body {
 	background: $background;
+}
+
+.scrollable {
+	height: 400px;
+	overflow: auto;
 }

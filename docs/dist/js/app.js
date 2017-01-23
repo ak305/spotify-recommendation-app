@@ -11,12 +11,17 @@
 
   angular
       .module('MyApp', ['ngMaterial', 'ngCookies'])
-      .controller('SpotifyController', DemoCtrl);
+      .controller('SpotifyController', DemoCtrl)
+      .filter('trusted', ['$sce', function ($sce) {
+          return function(url) {
+              return $sce.trustAsResourceUrl(url);
+          };
+      }]);
 
   function DemoCtrl ($http, $timeout, $q, $cookies, $location) {
     var vm = this;
     console.log($location.url());
-    
+    vm.loggedIn = false;
     if (/access_token/.test($location.url()) && /refresh_token/.test($location.url())) {
       vm.authenticated = true;
       var promise = getMySavedTracks();
@@ -36,7 +41,8 @@
         vm.accessToken = '';
         vm.refreshToken = '';
         vm.userId = '';
-        vm.recommendations = '';
+        vm.recommendations = [];
+        vm.loggedIn = true;
       });
 
     } 
@@ -161,7 +167,10 @@
           .success(function(result) {
             console.log(result);
             for (var i in result.tracks) {
-              vm.recommendations += result.tracks[i].name + ' - ' + result.tracks[i].artists[0].name + '\n';
+              var object = {song: result.tracks[i].name, 
+                            artist: result.tracks[i].artists[0].name,
+                            uri: "https://embed.spotify.com/?uri=" + result.tracks[i].uri };
+              vm.recommendations.push(object);
             }
             defer.resolve(result);
           })

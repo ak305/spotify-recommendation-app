@@ -30,15 +30,15 @@
 	Navigation elements that should appear on all pages...
 </nav> -->
   
-  <div class="container" md-colors="{color: 'grey-100'}">
-    <div id="login" >
+  <div class="container" ng-controller="SpotifyController as vm" md-colors="{color: 'grey-100'}">
+    <div id="login" ng-if="!vm.loggedIn">
       <h1>This is an example of the Authorization Code flow</h1>
       <a href="/login" class="btn btn-primary">Log in with Spotify</a>
     </div>
-    <div id="loggedin">
+    <div id="loggedin" ng-if="vm.loggedIn">
       <div id="user-profile">
       </div>
-      <div ng-controller="SpotifyController as vm" layout="column" ng-cloak>
+      <div layout="column" ng-cloak>
         <md-content class="md-padding" layout="column" style="min-height: 100px; background: #828282" md-colors="{color: 'grey-100'}" flex>
           <h1><img style="width:25px;height:25px" src="dist/img/Spotify_Icon_RGB_Green.png"/> Spotify Song Suggestions</h1>
           <h2 class="md-title">Use <code>md-autocomplete</code>  to build an ordered set of chips.</h2>
@@ -70,17 +70,25 @@
          <md-button ng-click="vm.getRecommendations()" class="md-raised md-primary">Get Recommendations</md-button>
 
         </md-content>
-        <md-input-container class="md-padding" layout="column" flex>
-          <textarea ng-model="vm.recommendations" style="min-height:400px"></textarea>
-        </md-input-container>
+        <md-content ng-if="vm.recommendations.length">
+          <md-list class="md-dense scrollable" flex>
+            <md-list-item class="md-2-line" ng-repeat="item in vm.recommendations">
+              <div class="md-list-item-text" layout="column">
+                <h4>{{ item.song }}</h4>
+                <p>{{ item.artist }}</p>
+                <iframe src="{{item.uri | trusted}}" width="100%" height="100" frameborder="0" allowtransparency="true"></iframe>
+              </div>
+            </md-list-item>
+          </md-list>
+        </md-content>
       </div>
-      <div id="oauth">
+      <!-- <div id="oauth">
       </div>
-      <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+      <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button> -->
     </div>
   </div>
 
-    <script id="user-profile-template" type="text/x-handlebars-template">
+    <!-- <script id="user-profile-template" type="text/x-handlebars-template">
       <h1>Logged in as {{display_name}}</h1>
       <div class="media">
         <div class="pull-left">
@@ -106,7 +114,7 @@
         <dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
         <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}></dd>
       </dl>
-    </script>
+    </script> -->
    <script>
       (function() {
         /**
@@ -122,12 +130,12 @@
           }
           return hashParams;
         }
-        var userProfileSource = document.getElementById('user-profile-template').innerHTML,
-            userProfileTemplate = Handlebars.compile(userProfileSource),
-            userProfilePlaceholder = document.getElementById('user-profile');
-        var oauthSource = document.getElementById('oauth-template').innerHTML,
-            oauthTemplate = Handlebars.compile(oauthSource),
-            oauthPlaceholder = document.getElementById('oauth');
+        // var userProfileSource = document.getElementById('user-profile-template').innerHTML,
+        //     userProfileTemplate = Handlebars.compile(userProfileSource),
+        //     userProfilePlaceholder = document.getElementById('user-profile');
+        // var oauthSource = document.getElementById('oauth-template').innerHTML,
+        //     oauthTemplate = Handlebars.compile(oauthSource),
+        //     oauthPlaceholder = document.getElementById('oauth');
         var params = getHashParams();
         var access_token = params.access_token,
             refresh_token = params.refresh_token,
@@ -137,40 +145,40 @@
         } else {
           if (access_token) {
             // render oauth info
-            oauthPlaceholder.innerHTML = oauthTemplate({
-              access_token: access_token,
-              refresh_token: refresh_token
-            });
+            // oauthPlaceholder.innerHTML = oauthTemplate({
+            //   access_token: access_token,
+            //   refresh_token: refresh_token
+            // });
             $.ajax({
                 url: 'https://api.spotify.com/v1/me',
                 headers: {
                   'Authorization': 'Bearer ' + access_token
                 },
                 success: function(response) {
-                  userProfilePlaceholder.innerHTML = userProfileTemplate(response);
-                  $('#login').hide();
-                  $('#loggedin').show();
+                  // userProfilePlaceholder.innerHTML = userProfileTemplate(response);
+                  // $('#login').hide();
+                  // $('#loggedin').show();
                 }
             });
           } else {
               // render initial screen
-              $('#login').show();
-              $('#loggedin').hide();
+              // $('#login').show();
+              // $('#loggedin').hide();
           }
-          document.getElementById('obtain-new-token').addEventListener('click', function() {
-            $.ajax({
-              url: '/refresh_token',
-              data: {
-                'refresh_token': refresh_token
-              }
-            }).done(function(data) {
-              access_token = data.access_token;
-              oauthPlaceholder.innerHTML = oauthTemplate({
-                access_token: access_token,
-                refresh_token: refresh_token
-              });
-            });
-          }, false);
+          // document.getElementById('obtain-new-token').addEventListener('click', function() {
+          //   $.ajax({
+          //     url: '/refresh_token',
+          //     data: {
+          //       'refresh_token': refresh_token
+          //     }
+          //   }).done(function(data) {
+          //     access_token = data.access_token;
+          //     oauthPlaceholder.innerHTML = oauthTemplate({
+          //       access_token: access_token,
+          //       refresh_token: refresh_token
+          //     });
+          //   });
+          // }, false);
         }
       })();
     </script>

@@ -42,8 +42,18 @@
         <md-content class="md-padding" layout="column" style="min-height: 100px; background: #828282" md-colors="{color: 'grey-100'}" flex>
           <h1><img style="width:25px;height:25px" src="dist/img/Spotify_Icon_RGB_Green.png"/> Spotify Song Suggestions</h1>
           <h2 class="md-title">Use <code>md-autocomplete</code>  to build an ordered set of chips.</h2>
-
-          <md-chips ng-model="vm.selectedSongs" md-autocomplete-snap
+          <md-content ng-if="vm.playlists.length">
+            <md-list class="md-dense scrollable" flex>
+              <md-list-item class="md-2-line" ng-repeat="item in vm.playlists">
+                <div class="md-list-item-text" layout="column">
+                  <h4>{{ item.name }}</h4>
+                  <!-- <p>{{ item.id }}</p> -->
+                  <md-button ng-click="vm.getPlaylistsTracks(item)" class="md-raised md-primary">Get Tracks</md-button>
+                </div>
+              </md-list-item>
+            </md-list>
+          </md-content>
+          <md-chips ng-if="playlistSelected" ng-init="vm.loadSongs()" ng-model="vm.selectedSongs" md-autocomplete-snap
               md-transform-chip="vm.transformChip($chip)"
               md-require-match="vm.autocompleteDemoRequireMatch">
             <md-autocomplete

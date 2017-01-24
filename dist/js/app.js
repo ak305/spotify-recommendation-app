@@ -21,17 +21,17 @@
   function DemoCtrl ($http, $timeout, $q, $cookies, $location) {
     var vm = this;
     console.log($location.url());
-    vm.loggedIn = false;
     if (/access_token/.test($location.url()) && /refresh_token/.test($location.url())) {
       vm.authenticated = true;
-      var promise = getMySavedTracks();
+      vm.playlists = [];
+      var promise = getUserPlaylists();
       promise.then(function(data) {
 
         vm.readonly = false;
         vm.selectedItem = null;
         vm.searchText = null;
         vm.querySearch = querySearch;
-        vm.songs = loadSongs();
+        // vm.songs = loadSongs();
         vm.selectedSongs = [];
         vm.numberChips = [];
         vm.numberChips2 = [];
@@ -43,9 +43,12 @@
         vm.userId = '';
         vm.recommendations = [];
         vm.loggedIn = true;
+        vm.playlistSelected = false;
       });
 
-    } 
+    } else {
+      vm.loggedIn = false;
+    }
 
     /**
      * Return the proper object when the append is called.
@@ -82,15 +85,16 @@
     }
 
     function loadSongs() {
+      console.log("HI");
       var songs = [];
-      for (var i in vm.playlists) {
-        // console.log(vm.playlists[i].track.name, vm.playlists[i].track.artists[0].name);
-        var object = {name: vm.playlists[i].track.name, 
-                      artist: vm.playlists[i].track.artists[0].name,
-                      id: vm.playlists[i].track.id,
-                      artist_id: vm.playlists[i].track.artists[0].id};
-        songs.push(object);
-      }
+      // for (var i in vm.playlists) {
+      //   // console.log(vm.playlists[i].track.name, vm.playlists[i].track.artists[0].name);
+      //   var object = {name: vm.playlists[i].track.name, 
+      //                 artist: vm.playlists[i].track.artists[0].name,
+      //                 id: vm.playlists[i].track.id,
+      //                 artist_id: vm.playlists[i].track.artists[0].id};
+      //   songs.push(object);
+      // }
 
       return songs.map(function (song) {
         song._lowername = song.name.toLowerCase();
@@ -106,7 +110,7 @@
       $http.get('/api/me/tracks')
           .success(function(result) {
             // console.log(result);
-            vm.playlists = result.items;
+            // vm.playlists = result.items;
             defer.resolve(result);
           })
           .error(function(data) {
@@ -123,7 +127,14 @@
             params: {user_id: $cookies.get('user_id') }
           })
           .success(function(result) {
-            vm.playlists = result.items;
+            console.log(result);
+            // vm.playlists = result.items;
+            for (var i in result.items) {
+              var object = {name: result.items[i].name, 
+                            id: result.items[i].id };
+              console.log(result.items[i].name);
+              vm.playlists.push(object);
+            }
             defer.resolve(result);
           })
           .error(function(data) {
@@ -134,13 +145,15 @@
       return defer.promise;
     }
 
-    function getPlaylistsTracks() {
+    vm.getPlaylistsTracks = function(playlist) {
       var defer = $q.defer();
+      console.log("HI");
       $http.get('/api/getPlaylistsTracks', {
-            params: {user_id: $cookies.get('user_id') }
+            params: { user_id: $cookies.get('user_id'), playlist_id: playlist.id }
           })
           .success(function(result) {
-            vm.playlists = result.items;
+            console.log(result);
+            // vm.playlists = result.items;
             defer.resolve(result);
           })
           .error(function(data) {
@@ -149,7 +162,7 @@
           });
 
       return defer.promise;
-    }
+    };
 
     vm.getRecommendations = function() {
       var defer = $q.defer();

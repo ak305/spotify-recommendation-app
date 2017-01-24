@@ -155,13 +155,14 @@ app.get('/api/getUserPlaylists', (req, res) => {
 });
 
 app.get('/api/getPlaylistsTracks', (req, res) => {
-	// spotifyApi.getPlaylist(req.query.user_id, )
- //  .then(function(data) {
- //    console.log('Some information about this playlist', data.body);
- //    res.send(data.body);
- //  }, function(err) {
- //    console.log('Something went wrong!', err);
- //  });
+	console.log(req.query.playlist_id);
+	spotifyApi.getPlaylist(req.query.user_id, req.query.playlist_id)
+  .then(function(data) {
+    console.log('Some information about this playlist', data.body);
+    res.send(data.body);
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
 });
 
 

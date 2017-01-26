@@ -44,8 +44,15 @@
           
           <md-content ng-if="vm.playlists.length">
             <md-list class="md-dense scrollable" flex>
+              <md-list-item class="md-2-line" >
+                <div class="md-list-item-text" layout="column" layout-align="center center" layout-wrap>
+                  <h4>My Saved Tracks</h4>
+                  <!-- <p>{{ item.id }}</p> -->
+                  <md-button ng-click="vm.getMySavedTracks()" class="md-raised md-primary">Get Tracks</md-button>
+                </div>
+              </md-list-item>
               <md-list-item class="md-2-line" ng-repeat="item in vm.playlists">
-                <div class="md-list-item-text" layout="column">
+                <div class="md-list-item-text" layout="column" layout-align="center center" layout-wrap>
                   <h4>{{ item.name }}</h4>
                   <!-- <p>{{ item.id }}</p> -->
                   <md-button ng-click="vm.getPlaylistsTracks(item)" class="md-raised md-primary">Get Tracks</md-button>
@@ -79,8 +86,9 @@
               Tell the autocomplete to require a match (when enabled you cannot create new chips)
               </md-checkbox>
             </p>
+            <md-button ng-click="vm.getRecommendations()" class="md-raised md-primary">Get Recommendations</md-button>
           </div>
-         <md-button ng-click="vm.getRecommendations()" class="md-raised md-primary">Get Recommendations</md-button>
+         
 
         </md-content>
         <md-content ng-if="vm.recommendations.length">

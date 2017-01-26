@@ -119,7 +119,7 @@
       });
     }
 
-    function getMySavedTracks() {
+    vm.getMySavedTracks = function() {
       var defer = $q.defer();
       // console.log("TEST");
       $http.get('/api/me/tracks')
@@ -131,8 +131,10 @@
                             artist: result.items[i].track.artists[0].name,
                             id: result.items[i].track.id,
                             artist_id: result.items[i].track.artists[0].id};
-              songs.push(object);
+              vm.songs.push(object);
             }
+            loadSongs();
+            vm.playlistSelected = true;
             defer.resolve(result);
           })
           .error(function(data) {

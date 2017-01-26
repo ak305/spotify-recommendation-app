@@ -11,7 +11,7 @@
       <div layout="column" ng-cloak>
         <md-content class="md-padding" layout="column" style="min-height: 100px; background: #828282" md-colors="{color: 'grey-100'}" flex>
           <h1><img style="width:25px;height:25px" src="dist/img/Spotify_Icon_RGB_Green.png"/> Spotify Song Suggestions</h1>
-          <h2 class="md-title">Use <code>md-autocomplete</code>  to build an ordered set of chips.</h2>
+          
           <md-content ng-if="vm.playlists.length">
             <md-list class="md-dense scrollable" flex>
               <md-list-item class="md-2-line" ng-repeat="item in vm.playlists">
@@ -23,30 +23,33 @@
               </md-list-item>
             </md-list>
           </md-content>
-          <md-chips ng-if="playlistSelected" ng-init="vm.loadSongs()" ng-model="vm.selectedSongs" md-autocomplete-snap
-              md-transform-chip="vm.transformChip($chip)"
-              md-require-match="vm.autocompleteDemoRequireMatch">
-            <md-autocomplete
-              md-selected-item="vm.selectedItem"
-              md-search-text="vm.searchText"
-              md-items="item in vm.querySearch(vm.searchText)"
-              md-item-text="item.name"
-              placeholder="Search for a song">
-            <span md-highlight-text="vm.searchText">{{item.name}} {{item.artist}}</span>
-            </md-autocomplete>
-            <md-chip-template>
-            <span>
-              <strong>{{$chip.name}}</strong>
-              <em>({{$chip.artist}})</em>
-            </span>
-            </md-chip-template>
-          </md-chips>
-          
-          <p>
-            <md-checkbox ng-model="vm.autocompleteDemoRequireMatch">
-            Tell the autocomplete to require a match (when enabled you cannot create new chips)
-            </md-checkbox>
-          </p>
+          <div ng-if="vm.playlistSelected">
+            <h2 class="md-title">Use <code>md-autocomplete</code>  to build an ordered set of chips.</h2>
+            <md-chips  ng-model="vm.selectedSongs" md-autocomplete-snap
+                md-transform-chip="vm.transformChip($chip)"
+                md-require-match="vm.autocompleteDemoRequireMatch">
+              <md-autocomplete
+                md-selected-item="vm.selectedItem"
+                md-search-text="vm.searchText"
+                md-items="item in vm.querySearch(vm.searchText)"
+                md-item-text="item.name"
+                placeholder="Search for a song">
+              <span md-highlight-text="vm.searchText">{{item.name}} {{item.artist}}</span>
+              </md-autocomplete>
+              <md-chip-template>
+              <span>
+                <strong>{{$chip.name}}</strong>
+                <em>({{$chip.artist}})</em>
+              </span>
+              </md-chip-template>
+            </md-chips>
+            
+            <p>
+              <md-checkbox ng-model="vm.autocompleteDemoRequireMatch">
+              Tell the autocomplete to require a match (when enabled you cannot create new chips)
+              </md-checkbox>
+            </p>
+          </div>
          <md-button ng-click="vm.getRecommendations()" class="md-raised md-primary">Get Recommendations</md-button>
 
         </md-content>

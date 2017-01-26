@@ -35,6 +35,7 @@
         vm.refreshToken = '';
         vm.userId = '';
         vm.recommendations = [];
+        vm.songs = [];
         vm.loggedIn = true;
         vm.playlistSelected = false;
       });
@@ -61,6 +62,7 @@
      */
     function querySearch (query) {
       var results = query ? vm.songs.filter(createFilterFor(query)) : [];
+      console.log(results);
       return results;
     }
 
@@ -71,6 +73,7 @@
       var lowercaseQuery = angular.lowercase(query);
 
       return function filterFn(song) {
+        console.log("SONG IS ",song);
         return (song._lowername.indexOf(lowercaseQuery) === 0) || 
         (song._lowerartist.indexOf(lowercaseQuery) === 0);
       };
@@ -78,8 +81,20 @@
     }
 
     function loadSongs() {
-      console.log("HI");
-      var songs = [];
+      console.log("TEST");
+      vm.readonly = false;
+      vm.selectedItem = null;
+      vm.searchText = null;
+      vm.querySearch = querySearch;
+      // vm.songs = loadSongs();
+      vm.selectedSongs = [];
+      vm.numberChips = [];
+      vm.numberChips2 = [];
+      vm.numberBuffer = '';
+      vm.autocompleteDemoRequireMatch = true;
+      vm.transformChip = transformChip;
+      console.log("LENGTH IS " + vm.songs.length);
+      var songs = vm.songs;
       // for (var i in vm.playlists) {
       //   // console.log(vm.playlists[i].track.name, vm.playlists[i].track.artists[0].name);
       //   var object = {name: vm.playlists[i].track.name, 
@@ -88,7 +103,7 @@
       //                 artist_id: vm.playlists[i].track.artists[0].id};
       //   songs.push(object);
       // }
-
+      console.log(songs, vm.playlistSelected);
       return songs.map(function (song) {
         song._lowername = song.name.toLowerCase();
         song._lowerartist = song.artist.toLowerCase();
@@ -102,8 +117,15 @@
       // console.log("TEST");
       $http.get('/api/me/tracks')
           .success(function(result) {
-            // console.log(result);
-            // vm.playlists = result.items;
+            console.log(result);
+            vm.songs = [];
+            for (var i in result.items) {
+              var object = {name: result.items[i].track.name, 
+                            artist: result.items[i].track.artists[0].name,
+                            id: result.items[i].track.id,
+                            artist_id: result.items[i].track.artists[0].id};
+              songs.push(object);
+            }
             defer.resolve(result);
           })
           .error(function(data) {
@@ -140,13 +162,23 @@
 
     vm.getPlaylistsTracks = function(playlist) {
       var defer = $q.defer();
-      console.log("HI");
+      // console.log("HI");
       $http.get('/api/getPlaylistsTracks', {
             params: { user_id: $cookies.get('user_id'), playlist_id: playlist.id }
           })
           .success(function(result) {
             console.log(result);
-            // vm.playlists = result.items;
+            vm.songs = [];
+            for (var i in result.tracks.items) {
+              var object = {name: result.tracks.items[i].track.name, 
+                            artist: result.tracks.items[i].track.artists[0].name,
+                            id: result.tracks.items[i].track.id,
+                            artist_id: result.tracks.items[i].track.artists[0].id};
+              vm.songs.push(object);
+            }
+            loadSongs();
+            vm.playlistSelected = true;
+
             defer.resolve(result);
           })
           .error(function(data) {
@@ -178,6 +210,9 @@
                             uri: "https://embed.spotify.com/?uri=" + result.tracks[i].uri };
               vm.recommendations.push(object);
             }
+            loadSongs();
+            vm.playlistSelected = true;
+
             defer.resolve(result);
           })
           .error(function(data) {

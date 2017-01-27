@@ -36,6 +36,7 @@
                 md-transform-chip="vm.transformChip($chip)"
                 md-require-match="vm.autocompleteDemoRequireMatch">
               <md-autocomplete
+                md-no-cache="vm.noCache"
                 md-selected-item="vm.selectedItem"
                 md-search-text="vm.searchText"
                 md-items="item in vm.querySearch(vm.searchText)"
